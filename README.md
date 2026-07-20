@@ -1,6 +1,8 @@
 # Allocator.os — Portfolio Control for the Agent Economy
 
-**Katrina Li** · [Live system demo](https://agent-allocator-landing-3b12ae.gitlab.io/) · [LinkedIn](https://www.linkedin.com/in/katrinacolumbia/)
+> **Interactive demo:** [https://agent-allocator-landing-3b12ae.gitlab.io/](https://agent-allocator-landing-3b12ae.gitlab.io/)
+
+**Katrina Li** · [LinkedIn](https://www.linkedin.com/in/katrinacolumbia/)
 
 This repository contains the interactive research demo for the thesis developed in Katrina Li's July 2026 working paper, **_Allocating Intelligence: Risk-Weighted Harnesses and Portfolio-Level Control for the Agent Economy_**.
 
