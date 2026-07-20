@@ -96,9 +96,14 @@ img, svg, canvas { display: block; }
 }
 .nav-logo { display: flex; align-items: center; gap: 10px; }
 .nav-logo svg { animation: pre-spin 18s linear infinite; }
+.logo-lockup { display: flex; flex-direction: column; align-items: flex-start; line-height: 1; }
 .logo-text { font-family: var(--font-head); font-weight: 700; font-size: 1.08rem; letter-spacing: -0.02em; }
 .logo-text .accent { color: var(--accent); }
 .logo-text .dot { color: var(--text-3); }
+.logo-owner {
+  margin-top: 5px; font-family: var(--font-mono); font-size: 0.48rem;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-3);
+}
 .nav-links { display: flex; gap: 24px; list-style: none; }
 .nav-links a {
   font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
