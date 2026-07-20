@@ -99,9 +99,9 @@ img, svg, canvas { display: block; }
 .logo-text { font-family: var(--font-head); font-weight: 700; font-size: 1.08rem; letter-spacing: -0.02em; }
 .logo-text .accent { color: var(--accent); }
 .logo-text .dot { color: var(--text-3); }
-.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links { display: flex; gap: 24px; list-style: none; }
 .nav-links a {
-  font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+  font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--text-2); position: relative; transition: color var(--transition);
 }
 .nav-links a::after {
@@ -111,8 +111,8 @@ img, svg, canvas { display: block; }
 .nav-links a:hover { color: var(--text); }
 .nav-links a:hover::after { width: 100%; }
 .btn-nav {
-  font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
-  padding: 11px 22px; border: 1px solid var(--line-2); color: var(--text); transition: all var(--transition);
+  font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 10px 16px; border: 1px solid var(--line-2); color: var(--text); transition: all var(--transition);
 }
 .btn-nav:hover { background: var(--text); border-color: var(--text); color: var(--bg); }
 .nav-burger { display: none; flex-direction: column; gap: 5px; background: none; border: 0; cursor: pointer; padding: 6px; }
