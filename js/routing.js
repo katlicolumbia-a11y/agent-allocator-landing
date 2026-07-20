@@ -1665,12 +1665,27 @@
   });
 })();
 
-/* The quote itself is supplied by TradingView. Keep only an honest
-   Eastern-time status clock here; do not simulate market movements. */
-(function marketClock() {
+/* Native terminal market tape. TradingView's scanner supplies the quote,
+   daily move, and market cap; quarterly fundamentals remain sourced from
+   NVIDIA's reported Q1 FY2027 results. No synthetic price movement. */
+(function liveMarketTape() {
+  var px = document.getElementById('rt-px');
+  var chg = document.getElementById('rt-chg');
+  var cap = document.getElementById('rt-cap');
   var clock = document.getElementById('rt-clock');
   var stage = document.getElementById('rterm-stage');
-  if (!clock || !stage) return;
+  if (!px || !chg || !cap || !clock || !stage) return;
+
+  var FEED = 'https://scanner.tradingview.com/america/scan';
+  var QUERY = JSON.stringify({
+    symbols: { tickers: ['NASDAQ:NVDA'], query: { types: [] } },
+    columns: ['close', 'change', 'market_cap_basic']
+  });
+  var lastPrice = null;
+  var lastUpdate = null;
+  var quoteTimer = null;
+  var clockTimer = null;
+  var fetching = false;
 
   function paintClock() {
     var now = new Date();
@@ -1683,13 +1698,63 @@
     } catch (e) {
       stamp = now.toLocaleString('en-US', { hour12: false });
     }
-    clock.textContent = stamp.toUpperCase() + ' ET · LIVE PRICE · Q1 FY27 REPORTED';
+    clock.textContent = stamp.toUpperCase() + ' ET · ' +
+      (lastUpdate ? 'MARKET FEED · 15S REFRESH' : 'CONNECTING MARKET FEED…');
   }
 
-  paintClock();
-  var timer = null;
-  function start() { if (!timer) timer = setInterval(paintClock, 1000); }
-  function stop() { clearInterval(timer); timer = null; }
+  function formatCap(value) {
+    return value >= 1e12 ? '$' + (value / 1e12).toFixed(2) + 'T' : '$' + (value / 1e9).toFixed(1) + 'B';
+  }
+
+  function refreshQuote() {
+    if (fetching) return;
+    fetching = true;
+    fetch(FEED, {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'omit',
+      cache: 'no-store',
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+      body: QUERY
+    })
+      .then(function (response) {
+        if (!response.ok) throw new Error('market feed ' + response.status);
+        return response.json();
+      })
+      .then(function (payload) {
+        var row = payload && payload.data && payload.data[0] && payload.data[0].d;
+        if (!row || row.length < 3) throw new Error('market feed payload');
+        var price = Number(row[0]);
+        var change = Number(row[1]);
+        var marketCap = Number(row[2]);
+        var directionUp = lastPrice === null ? change >= 0 : price >= lastPrice;
+
+        px.textContent = price.toFixed(2);
+        px.className = 'sec-px ' + (directionUp ? 'up' : 'dn');
+        chg.textContent = (change >= 0 ? '+' : '−') + Math.abs(change).toFixed(2) + '%';
+        chg.className = 'sec-chg ' + (change >= 0 ? 'up' : 'dn');
+        cap.textContent = 'MKT CAP ' + formatCap(marketCap);
+        lastPrice = price;
+        lastUpdate = new Date();
+        paintClock();
+      })
+      .catch(function () {
+        clock.textContent = 'MARKET FEED RETRYING · LAST VERIFIED SNAPSHOT';
+      })
+      .then(function () { fetching = false; });
+  }
+
+  function start() {
+    if (quoteTimer) return;
+    paintClock();
+    refreshQuote();
+    quoteTimer = setInterval(refreshQuote, 15000);
+    clockTimer = setInterval(paintClock, 1000);
+  }
+  function stop() {
+    clearInterval(quoteTimer); clearInterval(clockTimer);
+    quoteTimer = null; clockTimer = null;
+  }
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(function (entries) {
       entries[0].isIntersecting ? start() : stop();

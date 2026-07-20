@@ -763,17 +763,6 @@ body.no-motion .rstep, body.no-motion .rs-chip, body.no-motion .rterm-order { op
   padding: 8px 16px; border-bottom: 1px solid rgba(235,232,224,0.08);
   font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.06em; color: var(--text-2);
 }
-.sec-live-widget {
-  flex: 1 1 330px; min-width: 260px; height: 46px; overflow: hidden; align-self: center;
-  color-scheme: dark; --tv-widget-background-color: transparent;
-  --tv-widget-font-family: var(--font-mono); --tv-widget-text-color: #d8d5cd;
-  --tv-widget-price-text-color: #fff; --tv-widget-positive-color: #22c55e;
-  --tv-widget-negative-color: #ef4444;
-}
-.sec-live-widget .tradingview-widget-container,
-.sec-live-widget .tradingview-widget-container__widget { width: 100%; height: 46px; }
-.sec-live-fallback { display: inline-flex; align-items: center; gap: 7px; height: 46px; color: #d8d5cd; }
-.sec-live-fallback i { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px rgba(34,197,94,0.8); }
 .sec-tkr { color: #ffb400; font-weight: 700; letter-spacing: 0.1em; }
 .sec-px { color: #fff; font-size: 0.8rem; font-variant-numeric: tabular-nums; transition: color 0.2s ease; }
 .sec-px.up { color: #22c55e; }
@@ -782,8 +771,6 @@ body.no-motion .rstep, body.no-motion .rs-chip, body.no-motion .rterm-order { op
 .sec-chg.up { color: #22c55e; }
 .sec-chg.dn { color: #ef4444; }
 .sec-kv { color: var(--text-3); font-variant-numeric: tabular-nums; }
-.sec-source { border-bottom: 1px solid rgba(255,180,0,0.25); }
-.sec-source:hover { color: #ffb400; border-bottom-color: #ffb400; }
 .sec-time { margin-left: auto; color: var(--text-3); font-size: 0.54rem; font-variant-numeric: tabular-nums; }
 .rt-thead {
   display: grid; grid-template-columns: 26px minmax(0, 1fr) 74px minmax(126px, auto); gap: 12px;
@@ -800,7 +787,8 @@ body.no-motion .rstep, body.no-motion .rs-chip, body.no-motion .rterm-order { op
 .rt-fkeys a { color: #c9a24a; }
 .rt-fkeys a:hover b { text-decoration: underline; }
 @media (max-width: 900px) {
-  .sec-time, .sec-kv:nth-of-type(n+3) { display: none; }
+  .sec-time { display: none; }
+  .rterm-sec { gap: 5px 10px; }
   .rt-thead { grid-template-columns: 20px minmax(0, 1fr) 58px; }
   .rt-thead span:last-child { display: none; }
 }
