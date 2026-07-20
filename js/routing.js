@@ -1603,7 +1603,7 @@
       trigger: stage,
       pin: true,
       start: 'top top',
-      end: '+=8200',
+      end: '+=4200',
       scrub: 0.5,
       anticipatePin: 1,
       onRefresh: function () { layoutPage2(); master(proxy.p); }
