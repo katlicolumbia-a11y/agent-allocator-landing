@@ -62,6 +62,7 @@ var lenis = null;
   gsap.ticker.lagSmoothing(0);
   document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
+      if (a.hasAttribute('data-auto-console')) return;
       var id = a.getAttribute('href');
       if (id.length < 2) return;
       var target = document.querySelector(id);

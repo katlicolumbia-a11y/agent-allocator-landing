@@ -1610,6 +1610,59 @@
     }
   });
   master(0);
+
+  /* The primary-nav console jump doubles as a cinematic play button.
+     It moves directly to the pinned terminal, then drives the same master
+     renderer from ALLOC <GO> through the final Allocator Core view. */
+  var autoPlayback = null;
+
+  function stopAutoPlayback() {
+    if (!autoPlayback) return;
+    autoPlayback.kill();
+    autoPlayback = null;
+  }
+
+  function playConsoleSequence() {
+    stopAutoPlayback();
+    var playback = { p: 0 };
+    master(0);
+    autoPlayback = gsap.to(playback, {
+      p: 1,
+      duration: 18,
+      ease: 'power1.inOut',
+      onUpdate: function () { master(playback.p); },
+      onComplete: function () { autoPlayback = null; }
+    });
+  }
+
+  function openAndPlayConsole(e) {
+    e.preventDefault();
+    stopAutoPlayback();
+
+    if (window.lenis) {
+      window.lenis.scrollTo(stage, {
+        offset: 0,
+        duration: 1.25,
+        onComplete: playConsoleSequence
+      });
+    } else {
+      stage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.setTimeout(playConsoleSequence, 900);
+    }
+  }
+
+  document.querySelectorAll('[data-auto-console]').forEach(function (link) {
+    link.addEventListener('click', openAndPlayConsole);
+  });
+
+  /* A visitor can take manual control of the scroll-scrub at any time. */
+  window.addEventListener('wheel', stopAutoPlayback, { passive: true });
+  window.addEventListener('touchstart', stopAutoPlayback, { passive: true });
+  window.addEventListener('keydown', function (e) {
+    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].indexOf(e.key) !== -1) {
+      stopAutoPlayback();
+    }
+  });
 })();
 
 /* ═══════════════════════════════════════════════════════════
