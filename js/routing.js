@@ -1603,7 +1603,11 @@
       trigger: stage,
       pin: true,
       start: 'top top',
-      end: '+=2200',
+      /* Keep the cinematic scrub compact: after roughly 70% of one
+         viewport, release the pin and hand the page directly to Research. */
+      end: function () {
+        return '+=' + Math.max(480, Math.min(680, Math.round(window.innerHeight * 0.7)));
+      },
       scrub: 0.5,
       anticipatePin: 1,
       onRefresh: function () { layoutPage2(); master(proxy.p); }
