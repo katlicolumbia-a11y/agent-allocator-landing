@@ -1665,52 +1665,30 @@
   });
 })();
 
-/* ═══════════════════════════════════════════════════════════
-   Security tape — NVDA last price ticks like a terminal feed:
-   price colored by last tick direction, change vs prior close,
-   live Eastern-time clock. Runs only while the terminal is on
-   screen; static under reduced motion.
-═══════════════════════════════════════════════════════════ */
-(function securityTape() {
-  var px = document.getElementById('rt-px');
-  var chg = document.getElementById('rt-chg');
+/* The quote itself is supplied by TradingView. Keep only an honest
+   Eastern-time status clock here; do not simulate market movements. */
+(function marketClock() {
   var clock = document.getElementById('rt-clock');
   var stage = document.getElementById('rterm-stage');
-  if (!px || !stage) return;
-  var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  var CLOSE = 183.56;           // prior close — change is computed against this
-  var price = 187.42;
+  if (!clock || !stage) return;
 
   function paintClock() {
-    if (!clock) return;
     var now = new Date();
-    var t;
+    var stamp;
     try {
-      t = now.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false });
+      stamp = now.toLocaleString('en-US', {
+        timeZone: 'America/New_York', month: 'short', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+      });
     } catch (e) {
-      t = now.toLocaleTimeString('en-US', { hour12: false });
+      stamp = now.toLocaleString('en-US', { hour12: false });
     }
-    clock.textContent = '18-JUL-2026 ' + t + ' ET · DELAYED 15 MIN';
-  }
-
-  function tick() {
-    var dp = (Math.random() - 0.48) * 0.24;
-    price = Math.min(196, Math.max(178, price + dp));
-    px.textContent = price.toFixed(2);
-    px.classList.toggle('up', dp >= 0);
-    px.classList.toggle('dn', dp < 0);
-    var c = price - CLOSE, cp = c / CLOSE * 100;
-    chg.textContent = (c >= 0 ? '+' : '') + c.toFixed(2) + ' ' + (c >= 0 ? '+' : '') + cp.toFixed(2) + '%';
-    chg.className = 'sec-chg ' + (c >= 0 ? 'up' : 'dn');
-    paintClock();
+    clock.textContent = stamp.toUpperCase() + ' ET · LIVE PRICE · Q1 FY27 REPORTED';
   }
 
   paintClock();
-  if (REDUCED) return;
-
   var timer = null;
-  function start() { if (!timer) timer = setInterval(tick, 1500); }
+  function start() { if (!timer) timer = setInterval(paintClock, 1000); }
   function stop() { clearInterval(timer); timer = null; }
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(function (entries) {
